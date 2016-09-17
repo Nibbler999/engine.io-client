@@ -28,6 +28,7 @@
     "debug": "2.2.0",
     "engine.io-parser": "Nibbler999/engine.io-parser",
     "has-cors": "1.1.0",
+    "http-tcp-packets": "1.0.0",
     "indexof": "0.0.1",
     "parsejson": "0.0.1",
     "parseqs": "0.0.2",
