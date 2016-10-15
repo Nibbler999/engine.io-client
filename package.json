@@ -33,7 +33,7 @@
     "parsejson": "0.0.1",
     "parseqs": "0.0.2",
     "parseuri": "0.0.4",
-    "ws": "Nibbler999/ws",
+    "ws": "websockets/ws",
     "xmlhttprequest-ssl": "1.5.1",
     "yeast": "0.1.2"
   },
