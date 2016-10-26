@@ -2,7 +2,7 @@
   "name": "engine.io-client",
   "description": "Client for the realtime Engine",
   "license": "MIT",
-  "version": "1.6.11",
+  "version": "1.7.2",
   "homepage": "https://github.com/Nibbler999/engine.io-client",
   "contributors": [
     {
@@ -61,9 +61,9 @@
     "mocha": "1.16.2",
     "webpack": "1.12.12",
     "webpack-stream": "3.1.0",
-    "zuul": "3.10.1",
+    "zuul": "3.11.0",
     "zuul-builder-webpack": "1.1.0",
-    "zuul-ngrok": "3.2.0"
+    "zuul-ngrok": "4.0.0"
   },
   "scripts": {
     "test": "gulp test"
@@ -75,5 +75,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Nibbler999/engine.io-client.git"
-  }
+  },
+  "files": [
+    "index.js",
+    "lib/",
+    "engine.io.js"
+  ]
 }
