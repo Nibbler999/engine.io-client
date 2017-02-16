@@ -70,6 +70,7 @@
     "test": "gulp test"
   },
   "browser": {
+    "lib/transports/tcp.js": false,
     "ws": false,
     "xmlhttprequest-ssl": "./lib/xmlhttprequest.js"
   },
