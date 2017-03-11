@@ -1,4 +1,32 @@
 
+2.1.0  / 2017-03-11
+===================
+
+  * [chore] Bump engine.io-parser to version 2.0.1 (#549)
+  * [chore] Bump concat-stream to version 1.5.2 (#548)
+  * [feat] Allow to set the protocols for the websocket transport (#546)
+
+2.0.2  / 2017-02-16
+===================
+
+  * [chore] Bump ws to version 1.1.2 (vulnerability fix) (#539)
+  * [fix] Fix extraHeaders option in browser (#536)
+
+2.0.1  / 2017-01-30
+===================
+
+(bump following engine.io version)
+
+2.0.0  / 2017-01-22
+===================
+
+  * [chore] Fix Saucelabs tests (#532)
+  * [chore] Actually run tests in Saucelabs (#527)
+  * [feature] Allow extraHeaders to be set for browser clients in XHR requests (#519)
+  * [feature] Add support for per transport options (#518)
+  * [chore] Bump engine.io-parser to version 2.0.0 (#525)
+  * [chore] Update zuul config to speed up tests (#526)
+
 1.8.2  / 2016-12-11
 ===================
 
