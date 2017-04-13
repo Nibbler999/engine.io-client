@@ -34,7 +34,7 @@
     "parseqs": "0.0.5",
     "parseuri": "0.0.5",
     "ws": "^2.0.0",
-    "xhr2": "0.1.4",
+    "xmlhttprequest-ssl": "1.5.3",
     "yeast": "0.1.2"
   },
   "devDependencies": {
@@ -71,7 +71,7 @@
   "browser": {
     "lib/transports/tcp.js": false,
     "ws": false,
-    "xhr2": "./lib/xmlhttprequest.js"
+    "xmlhttprequest-ssl": "./lib/xmlhttprequest.js"
   },
   "repository": {
     "type": "git",
