@@ -172,7 +172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.cert = opts.cert || null;
 	  this.ca = opts.ca || null;
 	  this.ciphers = opts.ciphers || null;
-	  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? null : opts.rejectUnauthorized;
+	  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? true : opts.rejectUnauthorized;
 	  this.forceNode = !!opts.forceNode;
 
 	  // other options for Node.js client
@@ -1529,7 +1529,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  // decode payload
-	  parser.decodePayload(data, this.socket.binaryType, callback);
+	  parser.decodePayload(data, this.socket.binaryType, this.supportsBinary, callback);
 
 	  // if an event did not trigger closing
 	  if ('closed' !== this.readyState) {
@@ -2166,7 +2166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @api public
 	 */
 
-	exports.decodePayload = function (data, binaryType, callback) {
+	exports.decodePayload = function (data, binaryType, utf8decode, callback) {
 	  if (typeof data !== 'string') {
 	    return exports.decodePayloadAsBinary(data, binaryType, callback);
 	  }
@@ -2176,10 +2176,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    binaryType = null;
 	  }
 
+	  if (typeof utf8decode === 'function') {
+	    callback = utf8decode;
+	    utf8decode = null;
+	  }
+
 	  var packet;
 	  if (data === '') {
 	    // parser error - ignoring payload
 	    return callback(err, 0, 1);
+	  }
+
+	  if (utf8decode) {
+	    data = tryDecode(data);
+	    if (data === false) {
+	      return callback(err, 0, 1);
+	    }
 	  }
 
 	  var length = '', n, msg;
@@ -2433,7 +2445,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {
+	/* WEBPACK VAR INJECTION */(function(global) {/* global Blob File */
+
 	/*
 	 * Module requirements.
 	 */
@@ -2449,48 +2462,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Checks for binary data.
 	 *
-	 * Right now only Buffer and ArrayBuffer are supported..
+	 * Supports Buffer, ArrayBuffer, Blob and File.
 	 *
 	 * @param {Object} anything
 	 * @api public
 	 */
 
-	function hasBinary(data) {
-
-	  function _hasBinary(obj) {
-	    if (!obj) return false;
-
-	    if ( (global.Buffer && global.Buffer.isBuffer && global.Buffer.isBuffer(obj)) ||
-	         (global.ArrayBuffer && obj instanceof ArrayBuffer) ||
-	         (global.Blob && obj instanceof Blob) ||
-	         (global.File && obj instanceof File)
-	        ) {
-	      return true;
-	    }
-
-	    if (isArray(obj)) {
-	      for (var i = 0; i < obj.length; i++) {
-	          if (_hasBinary(obj[i])) {
-	              return true;
-	          }
-	      }
-	    } else if (obj && 'object' == typeof obj) {
-	      // see: https://github.com/Automattic/has-binary/pull/4
-	      if (obj.toJSON && 'function' == typeof obj.toJSON) {
-	        obj = obj.toJSON();
-	      }
-
-	      for (var key in obj) {
-	        if (Object.prototype.hasOwnProperty.call(obj, key) && _hasBinary(obj[key])) {
-	          return true;
-	        }
-	      }
-	    }
-
+	function hasBinary (obj) {
+	  if (!obj || typeof obj !== 'object') {
 	    return false;
 	  }
 
-	  return _hasBinary(data);
+	  if (isArray(obj)) {
+	    for (var i = 0, l = obj.length; i < l; i++) {
+	      if (hasBinary(obj[i])) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  }
+
+	  if ((typeof global.Buffer === 'function' && global.Buffer.isBuffer && global.Buffer.isBuffer(obj)) ||
+	     (typeof global.ArrayBuffer === 'function' && obj instanceof ArrayBuffer) ||
+	     (typeof global.Blob === 'function' && obj instanceof Blob) ||
+	     (typeof global.File === 'function' && obj instanceof File)
+	    ) {
+	    return true;
+	  }
+
+	  // see: https://github.com/Automattic/has-binary/pull/4
+	  if (obj.toJSON && typeof obj.toJSON === 'function' && arguments.length === 1) {
+	    return hasBinary(obj.toJSON(), true);
+	  }
+
+	  for (var key in obj) {
+	    if (Object.prototype.hasOwnProperty.call(obj, key) && hasBinary(obj[key])) {
+	      return true;
+	    }
+	  }
+
+	  return false;
 	}
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
@@ -2499,8 +2510,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports) {
 
+	var toString = {}.toString;
+
 	module.exports = Array.isArray || function (arr) {
-	  return Object.prototype.toString.call(arr) == '[object Array]';
+	  return toString.call(arr) == '[object Array]';
 	};
 
 
